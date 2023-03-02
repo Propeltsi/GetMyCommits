@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  nodejs:
+    build: .
+    environment:
+      - ORGANIZATION_NAME=${ORGANIZATION_NAME}
+      - PROJECT_NAME=${PROJECT_NAME}
+      - REPO_ID=${REPO_ID}
+      - PAT=${PAT}
+      - USERNAME=${USERNAME}
+      - AUTHOR=${AUTHOR}
+    expose:
+      - 3000
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - nodejs
