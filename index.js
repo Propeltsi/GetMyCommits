@@ -13,6 +13,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
+app.use(express.static("public"));
 app.get("/", (req, res) => {
   const url = `https://dev.azure.com/${organizationName}/${projectName}/_apis/git/repositories/${repositoryId}/commits?searchCriteria.author=${author}&api-version=5.1`;
 
@@ -38,48 +39,39 @@ app.get("/", (req, res) => {
         <html>
           <head>
             <title>Commits by ${author}</title>
-            <style>
-              table {
-                border-collapse: collapse;
-                width: 100%;
-              }
-              
-              th, td {
-                text-align: left;
-                padding: 8px;
-              }
-              
-              tr:nth-child(even) {
-                background-color: #f2f2f2;
-              }
-            </style>
+            <link rel="stylesheet" href="/css/bootstrap.min.css">
+            <link rel="stylesheet" href="/css/style.css">
           </head>
           <body>
-            <h1>Commits by ${author}</h1>
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Author</th>
-                  <th>Message</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${commits
-                  .map(
-                    (commit) => `
+            <div class="container">
+              <h1>Commits by ${author}</h1>
+              <table class="table table-striped">
+                <thead>
                   <tr>
-                    <td>${commit.id}</td>
-                    <td>${commit.author}</td>
-                    <td>${commit.message}</td>
-                    <td>${new Date(commit.date).toLocaleString()}</td>
+                    <th>ID</th>
+                    <th>Author</th>
+                    <th>Message</th>
+                    <th>Date</th>
                   </tr>
-                `
-                  )
-                  .join("")}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  ${commits
+                    .map(
+                      (commit) => `
+                    <tr>
+                      <td><a href="https://dev.azure.com/${organizationName}/${projectName}/_git/${repositoryId}/commit/${
+                        commit.id
+                      }" target="_blank">${commit.id}</a></td>
+                      <td>${commit.author}</td>
+                      <td>${commit.message}</td>
+                      <td>${new Date(commit.date).toLocaleString()}</td>
+                    </tr>
+                  `
+                    )
+                    .join("")}
+                </tbody>
+              </table>
+            </div>
           </body>
         </html>
       `);
