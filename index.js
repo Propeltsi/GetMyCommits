@@ -41,11 +41,12 @@ app.get("/", (req, res) => {
             <title>Commits by ${author}</title>
             <link rel="stylesheet" href="/css/bootstrap.min.css">
             <link rel="stylesheet" href="/css/style.css">
+            <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.css"/>
           </head>
           <body>
             <div class="container">
               <h1>Commits by ${author}</h1>
-              <table class="table table-striped">
+              <table id="commitsTable" class="table">
                 <thead>
                   <tr>
                     <th>ID</th>
@@ -72,6 +73,13 @@ app.get("/", (req, res) => {
                 </tbody>
               </table>
             </div>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.js"></script>
+            <script>
+              $(document).ready(function() {
+                $('#commitsTable').DataTable();
+              });
+            </script>
           </body>
         </html>
       `);
