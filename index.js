@@ -13,6 +13,7 @@ const express = require("express");
 const app = express();
 const port = 3000;
 
+app.use(express.static("public"));
 app.get("/", (req, res) => {
   const url = `https://dev.azure.com/${organizationName}/${projectName}/_apis/git/repositories/${repositoryId}/commits?searchCriteria.author=${author}&api-version=5.1`;
 
@@ -37,49 +38,48 @@ app.get("/", (req, res) => {
       res.send(`
         <html>
           <head>
-            <title>Commits by ${author}</title>
-            <style>
-              table {
-                border-collapse: collapse;
-                width: 100%;
-              }
-              
-              th, td {
-                text-align: left;
-                padding: 8px;
-              }
-              
-              tr:nth-child(even) {
-                background-color: #f2f2f2;
-              }
-            </style>
+            <title>Commits for ${projectName} by ${author}</title>
+            <link rel="stylesheet" href="/css/bootstrap.min.css">
+            <link rel="stylesheet" href="/css/style.css">
+            <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.css"/>
           </head>
           <body>
-            <h1>Commits by ${author}</h1>
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Author</th>
-                  <th>Message</th>
-                  <th>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${commits
-                  .map(
-                    (commit) => `
+            <div class="container">
+              <h1>Commits for ${projectName} by ${author}</h1>
+              <table id="commitsTable" class="table">
+                <thead>
                   <tr>
-                    <td>${commit.id}</td>
-                    <td>${commit.author}</td>
-                    <td>${commit.message}</td>
-                    <td>${new Date(commit.date).toLocaleString()}</td>
+                    <th>ID</th>
+                    <th>Author</th>
+                    <th>Message</th>
+                    <th>Date</th>
                   </tr>
-                `
-                  )
-                  .join("")}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  ${commits
+                    .map(
+                      (commit) => `
+                    <tr>
+                      <td><a href="https://dev.azure.com/${organizationName}/${projectName}/_git/${repositoryId}/commit/${
+                        commit.id
+                      }" target="_blank">${commit.id}</a></td>
+                      <td>${commit.author}</td>
+                      <td>${commit.message}</td>
+                      <td>${new Date(commit.date).toLocaleString()}</td>
+                    </tr>
+                  `
+                    )
+                    .join("")}
+                </tbody>
+              </table>
+            </div>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.js"></script>
+            <script>
+              $(document).ready(function() {
+                $('#commitsTable').DataTable();
+              });
+            </script>
           </body>
         </html>
       `);
