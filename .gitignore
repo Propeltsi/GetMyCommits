@@ -1,0 +1,14 @@
+# Node.js
+node_modules/
+npm-debug.log
+
+# dotenv environment variables
+.env
+
+# IDE/Editor files
+.vscode/
+.idea/
+
+# Log files
+logs/
+*.log
