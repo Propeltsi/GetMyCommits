@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+const winston = require("winston");
+
 const username = process.env.USERNAME;
 const personalAccessToken = process.env.PAT;
 const repositoryId = process.env.REPO_ID;
@@ -11,7 +13,7 @@ const request = require("request");
 const express = require("express");
 
 const app = express();
-const port = 3000;
+const port = 80;
 
 app.use(express.static("public"));
 app.get("/", (req, res) => {
@@ -84,11 +86,18 @@ app.get("/", (req, res) => {
         </html>
       `);
     } else {
-      res.send("Error");
+      logger.error(`Failed to connect to Azure DevOps: ${error.message}`);
+      res.status(500).send("Failed to retrieve commits");
     }
   });
 });
 
+const logger = winston.createLogger({
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "error.log", level: "error" }),
+  ],
+});
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
