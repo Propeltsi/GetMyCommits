@@ -38,14 +38,14 @@ app.get("/", (req, res) => {
       res.send(`
         <html>
           <head>
-            <title>Commits by ${author}</title>
+            <title>Commits for ${projectName} by ${author}</title>
             <link rel="stylesheet" href="/css/bootstrap.min.css">
             <link rel="stylesheet" href="/css/style.css">
             <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.css"/>
           </head>
           <body>
             <div class="container">
-              <h1>Commits by ${author}</h1>
+              <h1>Commits for ${projectName} by ${author}</h1>
               <table id="commitsTable" class="table">
                 <thead>
                   <tr>
