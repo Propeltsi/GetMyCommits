@@ -15,13 +15,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag propeltsi/getmycommits:latest
+      run: docker build . --file Dockerfile --tag propeltsi/getmycommits:test
     - name: Push Docker image to Docker Hub
       uses: docker/build-push-action@v2
       with:
         context: .
         push: true
-        tags: propeltsi/getmycommits:latest
+        tags: propeltsi/getmycommits:test
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
