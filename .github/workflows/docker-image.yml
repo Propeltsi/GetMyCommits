@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag propeltsi/getmycommits:$(date +%s)
+      run: docker build . --file Dockerfile --tag propeltsi/getmycommits:$(date +%Y%m%d%H%M%S)
     - name: Push Docker image to Docker Hub
       uses: docker/build-push-action@v2
       with:
