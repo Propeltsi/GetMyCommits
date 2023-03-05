@@ -1,7 +1,5 @@
 require("dotenv").config();
 
-const winston = require("winston");
-
 const username = process.env.USERNAME;
 const personalAccessToken = process.env.PAT;
 const repositoryId = process.env.REPO_ID;
@@ -14,6 +12,19 @@ const express = require("express");
 
 const app = express();
 const port = 80;
+
+var isEnvVarOK = true;
+
+if (
+  !username ||
+  !personalAccessToken ||
+  !repositoryId ||
+  !author ||
+  !organizationName ||
+  !projectName
+) {
+  isEnvVarOK = false;
+}
 
 app.use(express.static("public"));
 app.get("/", (req, res) => {
@@ -29,7 +40,7 @@ app.get("/", (req, res) => {
   };
 
   request(options, (error, response, body) => {
-    if (!error && response.statusCode == 200) {
+    if (!error && response.statusCode == 200 && isEnvVarOK) {
       const commits = JSON.parse(body).value.map((commit) => ({
         id: commit.commitId,
         author: commit.author.name,
@@ -85,19 +96,18 @@ app.get("/", (req, res) => {
           </body>
         </html>
       `);
+    } else if (!isEnvVarOK) {
+      res
+        .status(500)
+        .send(
+          "One or more required environment variables are missing or null."
+        );
     } else {
-      logger.error(`Failed to connect to Azure DevOps: ${error.message}`);
       res.status(500).send("Failed to retrieve commits");
     }
   });
 });
 
-const logger = winston.createLogger({
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: "error.log", level: "error" }),
-  ],
-});
 app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
