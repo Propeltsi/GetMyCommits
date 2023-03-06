@@ -54,12 +54,12 @@ app.get("/", (req, res) => {
             <title>Commits for ${projectName} by ${author}</title>
             <link rel="stylesheet" href="/css/bootstrap.min.css">
             <link rel="stylesheet" href="/css/style.css">
-            <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.css"/>
+            <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.3/css/dataTables.bootstrap5.min.css"/>
           </head>
           <body>
             <div class="container">
               <h1>Commits for ${projectName} by ${author}</h1>
-              <table id="commitsTable" class="table">
+              <table id="commitsTable" class="table-hover">
                 <thead>
                   <tr>
                     <th>ID</th>
@@ -86,11 +86,13 @@ app.get("/", (req, res) => {
                 </tbody>
               </table>
             </div>
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script src="https://cdn.datatables.net/v/bs4/dt-1.11.4/datatables.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+            <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
             <script>
               $(document).ready(function() {
-                $('#commitsTable').DataTable();
+                $('#commitsTable').DataTable({
+                  order: [[3, 'asc']],
+                });
               });
             </script>
           </body>
